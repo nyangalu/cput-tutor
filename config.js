@@ -30,7 +30,7 @@ window.TUTOR_CONFIG = {
 
   // Firebase → Project settings → General → Your apps → Web app config
   firebase: {
-    apiKey: "AIzaSyA_ecbTA8_wIFen_Fh4LkZeASB7S5PAfAY",
+    apiKey: "",
     authDomain: "cput-tutor.firebaseapp.com",
     databaseURL: "https://cput-tutor-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "cput-tutor",
