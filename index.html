@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CPUT First-Year Tutor</title>
+<meta name="theme-color" content="#0b2545">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0b2545;--navy2:#13315c;--teal:#0f9d8a;--teal-l:#e3f5f2;--gold:#f2b134;--bg:#f4f6f9;--card:#fff;--ink:#1b2430;--mut:#5d6b7c;--line:#e2e7ee;--red:#c23b3b;--r:14px}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5}
+button{font:inherit;cursor:pointer}input,select,textarea{font:inherit}
+.hidden{display:none!important}
+.topbar{background:var(--navy);color:#fff;display:flex;align-items:center;gap:12px;padding:10px 16px;position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px}
+.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--teal),var(--gold));display:grid;place-items:center;font-weight:800;color:var(--navy)}
+.brand small{display:block;font-weight:500;opacity:.75;font-size:12px}
+.spacer{flex:1}
+.lang{display:flex;background:rgba(255,255,255,.12);border-radius:999px;padding:3px}
+.lang button{border:0;background:none;color:#fff;padding:4px 10px;border-radius:999px;font-size:13px}
+.lang button.on{background:#fff;color:var(--navy);font-weight:600}
+.ghost{border:1px solid rgba(255,255,255,.35);background:none;color:#fff;border-radius:8px;padding:5px 10px;font-size:13px}
+.demo-banner{background:var(--gold);color:var(--navy);text-align:center;font-size:13px;padding:5px 10px;font-weight:600}
+/* auth */
+.auth-wrap{max-width:460px;margin:28px auto;padding:0 16px}
+.card{background:var(--card);border-radius:var(--r);box-shadow:0 1px 3px rgba(16,24,40,.06),0 6px 24px rgba(16,24,40,.05);padding:22px}
+.tabs{display:flex;gap:6px;background:var(--bg);padding:4px;border-radius:10px;margin-bottom:18px}
+.tabs button{flex:1;border:0;background:none;padding:9px;border-radius:8px;color:var(--mut);font-weight:600}
+.who{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:-6px 0 16px}
+.who button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 4px;font-size:13px;font-weight:600;color:var(--mut)}
+.who button.on{border-color:var(--teal);background:var(--teal-l);color:#0b6b5e}
+.tabs button.on{background:#fff;color:var(--navy);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+h1{font-size:22px;margin:0 0 4px;color:var(--navy)}
+.sub{color:var(--mut);margin:0 0 18px;font-size:14px}
+label{display:block;font-size:13px;font-weight:600;margin:12px 0 5px;color:#2c3a4b}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-l)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;margin-top:18px;border:0;background:var(--teal);color:#fff;padding:12px;border-radius:10px;font-weight:700;font-size:15px}
+.btn:disabled{opacity:.6}
+.btn.sec{background:#fff;color:var(--navy);border:1px solid var(--line)}
+.link{background:none;border:0;color:var(--teal);font-weight:600;padding:0;font-size:13px}
+.check{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:13px;color:var(--mut)}
+.check input{width:auto;margin-top:3px}
+.msg{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:14px}
+.msg.err{background:#fdecec;color:var(--red)}.msg.ok{background:var(--teal-l);color:#0b6b5e}
+.foot{text-align:center;color:var(--mut);font-size:12px;margin:16px 0}
+/* app */
+.app{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;max-width:1180px;margin:0 auto;padding:16px;height:calc(100vh - 56px)}
+.chat{display:flex;flex-direction:column;min-height:0;min-width:0;background:#fff;border-radius:var(--r);box-shadow:0 1px 3px rgba(16,24,40,.06)}
+.msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
+.b{max-width:85%;padding:11px 14px;border-radius:14px;word-wrap:break-word}
+.b.u{align-self:flex-end;background:var(--navy);color:#fff;border-bottom-right-radius:4px;white-space:pre-wrap}
+.b.a{align-self:flex-start;background:var(--bg);border-bottom-left-radius:4px}
+.b.a p{margin:.3em 0}.b.a ul,.b.a ol{margin:.3em 0;padding-left:1.3em}
+.b.a pre{background:#0d1b2a;color:#e0e6ee;padding:10px;border-radius:8px;overflow-x:auto;font-size:13px}
+.b.a code{font-family:ui-monospace,Consolas,monospace;font-size:.92em}
+.b.a a{color:var(--teal);word-break:break-all}
+.b.a h1,.b.a h2,.b.a h3{font-size:15px;margin:.5em 0 .2em;color:var(--navy)}
+.b.a table{border-collapse:collapse;font-size:13px}.b.a td,.b.a th{border:1px solid var(--line);padding:4px 6px}
+.typing{color:var(--mut);font-style:italic}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 14px;border-top:1px solid var(--line);scrollbar-width:none}
+.chip{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:13px;color:var(--navy2)}
+.chip:hover{border-color:var(--teal);background:var(--teal-l)}
+.composer{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--line)}
+.composer textarea{resize:none;height:46px;max-height:140px}
+.send{border:0;background:var(--teal);color:#fff;border-radius:10px;padding:0 18px;font-weight:700}
+.side{display:flex;flex-direction:column;gap:16px;overflow-y:auto;min-height:0}
+.side h3{margin:0 0 10px;font-size:15px;color:var(--navy);display:flex;align-items:center;gap:8px}
+.dl{display:flex;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.dl:first-of-type{border-top:0}
+.days{flex:none;width:52px;text-align:center;border-radius:10px;background:var(--teal-l);color:#0b6b5e;padding:4px 0;font-weight:700;line-height:1.1}
+.days small{display:block;font-weight:500;font-size:10px}
+.days.soon{background:#fff3dc;color:#8a5a00}.days.past{background:#eee;color:#777}
+.dl b{font-size:14px}.dl p{margin:2px 0 0;color:var(--mut);font-size:13px}
+.ask textarea{height:70px}
+.askitem{border-top:1px solid var(--line);padding:9px 0;font-size:13px}
+.askitem .rep{background:var(--teal-l);border-radius:8px;padding:7px 9px;margin-top:6px}
+.pill{font-size:11px;padding:2px 8px;border-radius:999px;background:#eef1f5;color:var(--mut)}
+.pill.ok{background:var(--teal-l);color:#0b6b5e}
+.links a{display:block;color:var(--navy2);font-size:13px;padding:5px 0;text-decoration:none;border-top:1px solid var(--line)}
+.links a:first-of-type{border-top:0}.links a:hover{color:var(--teal)}
+.mobnav{display:none}
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr);height:calc(100vh - 56px - 58px);padding:10px}
+  .side{display:none}.side.show{display:flex}.chat.hide{display:none}
+  .mobnav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);z-index:5}
+  .mobnav button{flex:1;border:0;background:none;padding:10px 4px 12px;font-size:12px;color:var(--mut);font-weight:600}
+  .mobnav button.on{color:var(--teal)}
+  .brand small{display:none}
+}
+</style>
+</head>
+<body>
+<div id="demoBanner" class="demo-banner hidden">DEMO MODE — data is saved only in this browser. Try student no. 230000001, surname “Demo”.</div>
+<div class="topbar">
+  <div class="brand"><div class="logo">1Y</div><div><span id="tAppName">CPUT First-Year Tutor</span><small id="tSub">Faculty of Engineering &amp; the Built Environment</small></div></div>
+  <div class="spacer"></div>
+  <div class="lang"><button data-l="en" class="on">EN</button><button data-l="xh">isiXhosa</button></div>
+  <button id="logoutBtn" class="ghost hidden" data-t="logout">Log out</button>
+</div>
+
+<!-- LOADING -->
+<div id="vLoading" class="auth-wrap"><div class="card" style="text-align:center;color:var(--mut)">Loading…</div></div>
+
+<!-- AUTH -->
+<div id="vAuth" class="auth-wrap hidden">
+  <div class="card">
+    <div class="tabs"><button id="tabLogin" class="on" data-t="login">Log in</button><button id="tabReg" data-t="register">Register (first time)</button></div>
+    <div class="who" id="who"><button type="button" data-who="student" data-t="whoStudent">CPUT student</button><button type="button" data-who="staff" data-t="whoStaff">CPUT staff</button><button type="button" data-who="visitor" data-t="whoVisitor">Visitor</button></div>
+
+    <form id="fLogin" autocomplete="on">
+      <h1 data-t="welcomeBack">Welcome back</h1>
+      <p class="sub" id="lSub">Log in with your student number.</p>
+      <label id="lIdLabel">Student number</label>
+      <input id="lSn" inputmode="numeric" autocomplete="username" placeholder="e.g. 230123456" required>
+      <label data-t="pw">Password</label>
+      <input id="lPw" type="password" autocomplete="current-password" required>
+      <button class="btn" type="submit" data-t="login">Log in</button>
+      <div style="display:flex;justify-content:space-between;margin-top:12px">
+        <button type="button" class="link" id="forgotBtn" data-t="forgot">Forgot password?</button>
+        <button type="button" class="link" id="toReg" data-t="firstTime">First time? Register</button>
+      </div>
+      <div id="lMsg"></div>
+    </form>
+
+    <form id="fReg" class="hidden" autocomplete="on">
+      <h1 data-t="regTitle">Register</h1>
+      <p class="sub" id="rSub">Only students on the class list can register. Use your real student number and surname.</p>
+      <div class="not-visitor"><label id="rIdLabel">Student number</label>
+      <input id="rSn" autocomplete="username"></div>
+      <div class="not-student"><label id="rEmailLabel">Email</label>
+      <input id="rEmail" type="email" autocomplete="email"></div>
+      <div class="only-visitor"><label data-t="org">Organisation / institution</label><input id="rOrg" autocomplete="organization"></div>
+      <div class="only-staff"><label data-t="dept">Department</label><input id="rDept"></div>
+      <label id="rCodeLabel">Workshop code (only if your lecturer gave you one)</label>
+      <input id="rCode" autocomplete="off" autocapitalize="characters" placeholder="e.g. PY7K2Q" style="text-transform:uppercase;letter-spacing:2px">
+      <div class="row2">
+        <div><label data-t="first">First name</label><input id="rFirst" autocomplete="given-name" required></div>
+        <div><label data-t="last">Surname</label><input id="rLast" autocomplete="family-name" required></div>
+      </div>
+      <div class="row2">
+        <div><label data-t="pw">Password</label><input id="rPw" type="password" autocomplete="new-password" minlength="6" required></div>
+        <div><label data-t="pw2">Confirm password</label><input id="rPw2" type="password" autocomplete="new-password" required></div>
+      </div>
+      <label data-t="langPref">Preferred language</label>
+      <select id="rLang"><option>English</option><option>isiXhosa</option><option>Afrikaans</option><option>isiZulu</option><option>Sesotho</option><option>Other</option></select>
+      <div class="row2 not-visitor">
+        <div><label data-t="campus">Campus</label>
+          <select id="rCampus"><option>Bellville</option><option>District Six</option><option>Mowbray</option><option>Wellington</option><option>Granger Bay</option><option>Other</option></select></div>
+        <div class="only-student"><label data-t="living">Where do you stay?</label>
+          <select id="rLiving"><option data-t="optRes" value="CPUT residence">CPUT residence</option><option data-t="optPrivRes" value="Private student accommodation">Private student accommodation</option><option data-t="optHome" value="At home / with family">At home / with family</option><option data-t="optOther" value="Other">Other</option></select></div>
+      </div>
+      <div class="not-visitor"><label data-t="transport">How do you usually travel to campus?</label>
+      <select id="rTransport"><option data-t="optTrain" value="Train">Train</option><option data-t="optBus" value="Bus (MyCiTi / Golden Arrow)">Bus (MyCiTi / Golden Arrow)</option><option data-t="optTaxi" value="Minibus taxi">Minibus taxi</option><option data-t="optShuttle" value="CPUT shuttle">CPUT shuttle</option><option data-t="optWalk" value="Walk">Walk</option><option data-t="optCar" value="Car / lift club">Car / lift club</option></select>
+      <label data-t="station">Nearest train station (optional)</label>
+      <input id="rStation" placeholder="e.g. Bellville, Langa, Khayelitsha"></div>
+      <div class="check"><input type="checkbox" id="rConsent"><span id="rConsentTxt">I understand that my lecturer can see how I use the tutor and my study questions, to improve teaching. Personal and wellbeing chats are hidden from the lecturer dashboard.</span></div>
+      <button class="btn" type="submit" data-t="createAcc">Create my account</button>
+      <div id="rMsg"></div>
+    </form>
+  </div>
+  <p class="foot" data-t="foot">Works on any phone or computer browser. Data-light.</p>
+</div>
+
+<!-- VERIFY -->
+<div id="vVerify" class="auth-wrap hidden"><div class="card">
+  <h1 data-t="verifyTitle">Check your myCPUT email</h1>
+  <p class="sub" id="verifyText"></p>
+  <button class="btn" id="verifyContinue" data-t="continue">Continue</button>
+  <button class="btn sec" id="verifyResend" data-t="resend">Resend email</button>
+  <div id="vMsg"></div>
+</div></div>
+
+<!-- APP -->
+<div id="vApp" class="app hidden">
+  <section class="chat" id="chatPane">
+    <div class="msgs" id="msgs"></div>
+    <div class="chips" id="chips"></div>
+    <form class="composer" id="fChat">
+      <textarea id="chatIn" rows="1" data-tp="typeQ" placeholder="Type your question…"></textarea>
+      <button class="send" id="sendBtn" data-t="send">Send</button>
+    </form>
+  </section>
+  <aside class="side" id="sidePane">
+    <div class="card" id="dlCard"><h3>📅 <span data-t="deadlines">Deadlines &amp; announcements</span></h3><div id="dlList"></div></div>
+    <div class="card ask"><h3>✉️ <span data-t="askLect">Ask my lecturer</span></h3>
+      <form id="fAsk"><textarea id="askIn" data-tp="askPh" placeholder="Write a question for your lecturer…"></textarea>
+      <button class="btn" style="margin-top:8px;padding:9px" data-t="send">Send</button></form>
+      <div id="askList" style="margin-top:8px"></div></div>
+    <div class="card links"><h3>🔗 <span data-t="usefulLinks">Useful links</span></h3>
+      <a href="https://www.cput.ac.za/student/campus-life/fye" target="_blank" rel="noopener">First Year Experience (FYE)</a>
+      <a href="https://cttrains.co.za/train-form.php" target="_blank" rel="noopener">Train times — any station search</a>
+      <a href="https://cttrains.co.za/status2.php" target="_blank" rel="noopener">Train delays &amp; updates</a>
+      <a href="https://www.nsfas.org.za" target="_blank" rel="noopener">NSFAS</a>
+      <a href="https://blackboard.cput.ac.za" target="_blank" rel="noopener">Blackboard (myClassroom)</a>
+      <div style="font-size:12px;color:var(--mut);margin-top:8px;border-top:1px solid var(--line);padding-top:8px">Student Counselling: Bellville 021 959 6182 · District Six 021 460 3237<br>Higher Health 24h: 0800 36 36 36 · Suicide crisis: 0800 567 567</div>
+    </div>
+  </aside>
+</div>
+<nav class="mobnav hidden" id="mobnav">
+  <button class="on" data-pane="chat">💬 <span data-t="chat">Chat</span></button>
+  <button data-pane="side">📅 <span data-t="more">Deadlines &amp; lecturer</span></button>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="config.js"></script>
+<script src="common.js"></script>
+<script>
+(() => {
+const { CFG, DEMO, H, store, buildSystemPrompt, splitTopic, askAI } = window.Tutor;
+const $ = H.$, $$ = H.$$;
+
+// ---------------- i18n ----------------
+const T = {
+ en:{whoStudent:"CPUT student",whoStaff:"CPUT staff",whoVisitor:"Visitor",staffNo:"Staff number",email:"Email",staffEmail:"Your CPUT email (@cput.ac.za)",org:"Organisation / institution",dept:"Department",codeReq:"Workshop code (shown on the screen)",
+  loginSubStaff:"Log in with your staff number.",loginSubVisitor:"Log in with your email address.",regSubOther:"Enter the workshop code shown on the screen.",
+  errBadCode:"The workshop code is wrong, or sign-up is closed. Ask the presenter.",errStaffEmail:"Use your CPUT staff email (ending in @cput.ac.za).",errStaffTaken:"This staff number is already registered. Log in, or ask the presenter to reset it.",errEmail:"Enter a valid email address.",errId:"Enter a valid staff number.",
+  verifyTextOther:"We sent a link to {email}. Open that email, click the link, then press Continue.",resetSentOther:"A reset link was sent to your email.",
+  consentOther:"I understand that the workshop presenter can see how I use the tutor and my questions. Personal and wellbeing chats are hidden from the dashboard.",
+  login:"Log in",register:"Register (first time)",welcomeBack:"Welcome back",loginSub:"Log in with your student number.",sn:"Student number",pw:"Password",forgot:"Forgot password?",firstTime:"First time? Register",
+  regTitle:"Register",regSub:"Use your real student number and surname. If you are at a workshop, enter the code on the screen.",code:"Workshop code (only if your lecturer gave you one)",first:"First name",last:"Surname",pw2:"Confirm password",langPref:"Preferred language",campus:"Campus",living:"Where do you stay?",
+  optRes:"CPUT residence",optPrivRes:"Private student accommodation",optHome:"At home / with family",optOther:"Other",transport:"How do you usually travel to campus?",optTrain:"Train",optBus:"Bus (MyCiTi / Golden Arrow)",optTaxi:"Minibus taxi",optShuttle:"CPUT shuttle",optWalk:"Walk",optCar:"Car / lift club",
+  station:"Nearest train station (optional)",consent:"I understand that my lecturer can see how I use the tutor and my study questions, to improve teaching. Personal and wellbeing chats are hidden from the lecturer dashboard.",createAcc:"Create my account",foot:"Works on any phone or computer browser. Data-light.",
+  verifyTitle:"Check your myCPUT email",verifyText:"We sent a link to {email}. Open your myCPUT email, click the link, then press Continue.",continue:"Continue",resend:"Resend email",notVerified:"Not verified yet — click the link in the email first (check Junk too).",sent:"Email sent.",
+  logout:"Log out",send:"Send",typeQ:"Type your question…",deadlines:"Deadlines & announcements",askLect:"Ask my lecturer",askPh:"Write a question for your lecturer…",usefulLinks:"Useful links",chat:"Chat",more:"Deadlines & lecturer",
+  thinking:"Thinking…",daysLeft:"days",today:"today",past:"done",noDl:"No deadlines posted yet.",waiting:"Waiting for reply",replied:"Lecturer replied",askSent:"Sent to your lecturer.",
+  errNotOnList:"You're not on the class list, or the workshop code is wrong or closed. Check your details and the code, or ask your lecturer.",errAlready:"This student number is already registered. Please log in (or use Forgot password).",errBadLogin:"Your number/email or password is wrong.",errWeak:"Password must be at least 6 characters.",
+  errMatch:"Passwords do not match.",errFill:"Please fill in all the required fields.",errSn:"Enter a valid student number (digits only).",errConsent:"Please tick the box to agree.",errSnFirst:"Enter your student number first.",resetSent:"A reset link was sent to your myCPUT email.",errGeneric:"Something went wrong. Please try again.",errTooMany:"Too many attempts. Wait a few minutes.",errAI:"The tutor could not answer right now. Please try again in a minute.",
+  welcome:"Hi {name}! 👋 I'm your first-year tutor. Ask me about your **modules**, **planning your studies**, **getting to campus**, **money** or **campus life**. You can write in English or isiXhosa.",
+  chips:["Plan my study week","Make an exam revision plan","Explain a maths concept","Help with my Python code","Train times to campus","Budget tips on NSFAS","Clubs & campus life","I'm feeling stressed"]},
+ xh:{whoStudent:"Umfundi we-CPUT",whoStaff:"Abasebenzi be-CPUT",whoVisitor:"Undwendwe",staffNo:"Inombolo yabasebenzi",email:"I-imeyile",staffEmail:"I-imeyile yakho ye-CPUT (@cput.ac.za)",org:"Umbutho / iziko",dept:"Isebe",codeReq:"Ikhowudi yewekshophu (ekwiscreen)",
+  loginSubStaff:"Ngena ngenombolo yakho yabasebenzi.",loginSubVisitor:"Ngena ngedilesi yakho ye-imeyile.",regSubOther:"Faka ikhowudi yewekshophu ekwiscreen.",
+  errBadCode:"Ikhowudi yewekshophu ayichanekanga, okanye ukubhalisa kuvaliwe. Buza umbonisi.",errStaffEmail:"Sebenzisa i-imeyile yakho yabasebenzi be-CPUT (egqibela nge-@cput.ac.za).",errStaffTaken:"Le nombolo yabasebenzi sele ibhalisiwe. Ngena, okanye ucele umbonisi ayiseta kwakhona.",errEmail:"Faka idilesi ye-imeyile echanekileyo.",errId:"Faka inombolo yabasebenzi echanekileyo.",
+  verifyTextOther:"Sithumele ilinki ku-{email}. Vula loo imeyile, ucofe ilinki, emva koko ucofe Qhubeka.",resetSentOther:"Ilinki yokutshintsha iphasiwedi ithunyelwe kwi-imeyile yakho.",
+  consentOther:"Ndiyaqonda ukuba umbonisi wewekshophu unokubona indlela endiyisebenzisa ngayo le nkqubo nemibuzo yam. Iincoko zobuqu nezempilo-ntle zifihliwe kwideshibhodi.",
+  login:"Ngena",register:"Bhalisa (okokuqala)",welcomeBack:"Wamkelekile kwakhona",loginSub:"Ngena ngenombolo yakho yomfundi.",sn:"Inombolo yomfundi",pw:"Iphasiwedi",forgot:"Uyilibele iphasiwedi?",firstTime:"Okokuqala? Bhalisa",
+  regTitle:"Bhalisa",regSub:"Sebenzisa inombolo yakho yomfundi nefani yakho yokwenyani. Ukuba ukwiwekshophu, faka ikhowudi ekwiscreen.",code:"Ikhowudi yewekshophu (ukuba umhlohli wakho ukunike yona)",first:"Igama",last:"Ifani",pw2:"Qinisekisa iphasiwedi",langPref:"Ulwimi olukhethayo",campus:"Ikhampasi",living:"Uhlala phi?",
+  optRes:"Indawo yokuhlala ye-CPUT",optPrivRes:"Indawo yabucala yabafundi",optHome:"Ekhaya / nosapho",optOther:"Enye",transport:"Uhamba ngantoni usiya ekhampasini?",optTrain:"Uloliwe",optBus:"Ibhasi (MyCiTi / Golden Arrow)",optTaxi:"Iteksi",optShuttle:"I-shuttle ye-CPUT",optWalk:"Ndihamba ngeenyawo",optCar:"Imoto / i-lift club",
+  station:"Isikhululo sikaloliwe esikufutshane (akunyanzelekanga)",consent:"Ndiyaqonda ukuba umhlohli wam unokubona indlela endiyisebenzisa ngayo le nkqubo nemibuzo yam yezifundo, ukuze aphucule ukufundisa. Iincoko zobuqu nezempilo-ntle zifihliwe kwideshibhodi yomhlohli.",createAcc:"Yenza iakhawunti yam",foot:"Isebenza kuyo nayiphi na ifowuni okanye ikhompyutha. Itya idatha encinci.",
+  verifyTitle:"Jonga i-imeyile yakho ye-myCPUT",verifyText:"Sithumele ilinki ku-{email}. Vula i-imeyile yakho ye-myCPUT, ucofe ilinki, emva koko ucofe Qhubeka.",continue:"Qhubeka",resend:"Thumela kwakhona",notVerified:"Ayikaqinisekiswa — cofa ilinki ekwi-imeyile kuqala (jonga naku-Junk).",sent:"I-imeyile ithunyelwe.",
+  logout:"Phuma",send:"Thumela",typeQ:"Bhala umbuzo wakho…",deadlines:"Imihla yokungenisa nezaziso",askLect:"Buza umhlohli wam",askPh:"Bhalela umhlohli wakho umbuzo…",usefulLinks:"Iilinki eziluncedo",chat:"Incoko",more:"Imihla nomhlohli",
+  thinking:"Ndiyacinga…",daysLeft:"iintsuku",today:"namhlanje",past:"kudlule",noDl:"Akukabikho mihla ithunyelweyo.",waiting:"Kulindwe impendulo",replied:"Umhlohli uphendule",askSent:"Ithunyelwe kumhlohli wakho.",
+  errNotOnList:"Awukho kuluhlu lweklasi, okanye ikhowudi yewekshophu ayichanekanga okanye ivaliwe. Jonga iinkcukacha zakho nekhowudi, okanye ubuze umhlohli wakho.",errAlready:"Le nombolo yomfundi sele ibhalisiwe. Nceda ungene (okanye usebenzise Uyilibele iphasiwedi).",errBadLogin:"Inombolo/i-imeyile yakho okanye iphasiwedi ayichanekanga.",errWeak:"Iphasiwedi mayibe noonobumba ubuncinane aba-6.",
+  errMatch:"Iiphasiwedi azifani.",errFill:"Nceda ugcwalise zonke iindawo ezifunekayo.",errSn:"Faka inombolo yomfundi echanekileyo (amanani kuphela).",errConsent:"Nceda uphawule ibhokisi ukuvuma.",errSnFirst:"Faka inombolo yakho yomfundi kuqala.",resetSent:"Ilinki yokutshintsha iphasiwedi ithunyelwe kwi-imeyile yakho ye-myCPUT.",errGeneric:"Kukho into engahambanga kakuhle. Nceda uzame kwakhona.",errTooMany:"Uzame kaninzi kakhulu. Linda imizuzu embalwa.",errAI:"Umncedisi akakwazi ukuphendula ngoku. Nceda uzame kwakhona emva komzuzu.",
+  welcome:"Molo {name}! 👋 Ndingumncedisi wakho wonyaka wokuqala. Ndibuze ngee**modyuli** zakho, **ukucwangcisa izifundo**, **ukuya ekhampasini**, **imali** okanye **ubomi basekhampasini**. Ungabhala ngesiNgesi okanye ngesiXhosa.",
+  chips:["Ndicwangcisele iveki yam yokufunda","Yenza isicwangciso sokulungiselela iimviwo","Ndichazele ingcamango yezibalo","Ndincede ngekhowudi yam ye-Python","Amaxesha kaloliwe ukuya ekhampasini","Iingcebiso zemali nge-NSFAS","Imibutho nobomi basekhampasini","Ndiziva ndixinezelekile"]}
+};
+let L = "en"; try { L = localStorage.getItem("tutorLang") || "en"; } catch(e){}
+const t = (k, v) => { let s = (T[L] && T[L][k]) ?? T.en[k] ?? k; if (v) for (const [a,b] of Object.entries(v)) s = s.replace("{"+a+"}", b); return s; };
+function applyLang(){
+  $$("[data-t]").forEach(el => { const k = el.dataset.t; if (T.en[k]) el.textContent = t(k); });
+  $$("[data-tp]").forEach(el => el.placeholder = t(el.dataset.tp));
+  $$(".lang button").forEach(b => b.classList.toggle("on", b.dataset.l === L));
+  document.documentElement.lang = L === "xh" ? "xh" : "en";
+  applyWho(); renderChips(); if (state.announcements) renderDeadlines(); if (state.asks) renderAsks(); if (state.verifyEmail) $("#verifyText").textContent = verifyMsg(state.verifyEmail);
+}
+$$(".lang button").forEach(b => b.onclick = () => { L = b.dataset.l; try{localStorage.setItem("tutorLang",L);}catch(e){} applyLang(); });
+
+// ---------------- state & views ----------------
+const state = { user:null, profile:null, settings:{}, announcements:null, asks:null, history:[], busy:false, verifyEmail:null, unsubs:[] };
+function show(v){ ["vLoading","vAuth","vVerify","vApp"].forEach(id => $("#"+id).classList.toggle("hidden", id!==v)); $("#logoutBtn").classList.toggle("hidden", !(v==="vApp"||v==="vVerify")); $("#mobnav").classList.toggle("hidden", v!=="vApp"); }
+function msg(el, text, ok){ $(el).innerHTML = text ? `<div class="msg ${ok?"ok":"err"}">${H.esc(text)}</div>` : ""; }
+function errText(e){ const m = e && e.message; return {BAD_CODE:t("errBadCode"),STAFF_EMAIL:t("errStaffEmail"),STAFF_TAKEN:t("errStaffTaken"),NOT_ON_LIST:t("errNotOnList"),ALREADY_REGISTERED:t("errAlready"),BAD_LOGIN:t("errBadLogin"),WEAK_PASSWORD:t("errWeak"),TOO_MANY:t("errTooMany")}[m] || t("errGeneric"); }
+if (DEMO) $("#demoBanner").classList.remove("hidden");
+$("#tAppName").textContent = CFG.appName;
+
+// account type
+let WHO = "student"; try { WHO = localStorage.getItem("tutorWho") || "student"; } catch(e){}
+function applyWho(){
+  $$("#who button").forEach(b => b.classList.toggle("on", b.dataset.who === WHO));
+  $$(".only-student").forEach(el => el.classList.toggle("hidden", WHO !== "student"));
+  $$(".only-staff").forEach(el => el.classList.toggle("hidden", WHO !== "staff"));
+  $$(".only-visitor").forEach(el => el.classList.toggle("hidden", WHO !== "visitor"));
+  $$(".not-visitor").forEach(el => el.classList.toggle("hidden", WHO === "visitor"));
+  $$(".not-student").forEach(el => el.classList.toggle("hidden", WHO === "student"));
+  const li = $("#lSn");
+  if (WHO === "student") { $("#lIdLabel").textContent = t("sn"); $("#lSub").textContent = t("loginSub"); li.type = "text"; li.inputMode = "numeric"; li.placeholder = "e.g. 230123456"; }
+  if (WHO === "staff") { $("#lIdLabel").textContent = t("staffNo"); $("#lSub").textContent = t("loginSubStaff"); li.type = "text"; li.inputMode = "text"; li.placeholder = ""; }
+  if (WHO === "visitor") { $("#lIdLabel").textContent = t("email"); $("#lSub").textContent = t("loginSubVisitor"); li.type = "email"; li.inputMode = "email"; li.placeholder = "name@example.com"; }
+  $("#rIdLabel").textContent = WHO === "staff" ? t("staffNo") : t("sn");
+  $("#rSn").inputMode = WHO === "staff" ? "text" : "numeric";
+  $("#rEmailLabel").textContent = WHO === "staff" ? t("staffEmail") : t("email");
+  $("#rCodeLabel").textContent = WHO === "student" ? t("code") : t("codeReq");
+  $("#rSub").textContent = WHO === "student" ? t("regSub") : t("regSubOther");
+  $("#rConsentTxt").textContent = WHO === "student" ? t("consent") : t("consentOther");
+}
+$$("#who button").forEach(b => b.onclick = () => { WHO = b.dataset.who; try{localStorage.setItem("tutorWho",WHO);}catch(e){} applyWho(); msg("#lMsg"); msg("#rMsg"); });
+const emailOk = e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+const staffOk = n => /^[A-Za-z0-9]{3,12}$/.test(n);
+const verifyMsg = em => String(em).endsWith("@" + CFG.emailDomain) ? t("verifyText",{email:em}) : t("verifyTextOther",{email:em});
+
+// tabs
+function authTab(reg){ $("#fLogin").classList.toggle("hidden",reg); $("#fReg").classList.toggle("hidden",!reg); $("#tabLogin").classList.toggle("on",!reg); $("#tabReg").classList.toggle("on",reg); msg("#lMsg"); msg("#rMsg"); }
+$("#tabLogin").onclick = () => authTab(false); $("#tabReg").onclick = () => authTab(true); $("#toReg").onclick = () => authTab(true);
+
+// ---------------- login ----------------
+function loginIdError(v){
+  if (WHO === "student" && !H.snValid(v)) return t("errSn");
+  if (WHO === "staff" && !staffOk(v)) return t("errId");
+  if (WHO === "visitor" && !emailOk(v)) return t("errEmail");
+  return "";
+}
+$("#fLogin").onsubmit = async e => {
+  e.preventDefault(); const idv = $("#lSn").value.trim(), pw = $("#lPw").value;
+  const bad = loginIdError(idv); if (bad) return msg("#lMsg", bad);
+  const b = e.submitter || $("#fLogin .btn"); b.disabled = true; msg("#lMsg");
+  try { const email = await store.resolveEmail(WHO, idv); await store.login(email, pw); } catch(err){ msg("#lMsg", errText(err)); } finally { b.disabled = false; }
+};
+$("#forgotBtn").onclick = async () => {
+  const idv = $("#lSn").value.trim(); if (!idv || loginIdError(idv)) return msg("#lMsg", loginIdError(idv) || t("errSnFirst"));
+  try { const email = await store.resolveEmail(WHO, idv); await store.resetPassword(email); msg("#lMsg", WHO === "student" ? t("resetSent") : t("resetSentOther"), true); } catch(err){ msg("#lMsg", errText(err)); }
+};
+
+// ---------------- register ----------------
+$("#fReg").onsubmit = async e => {
+  e.preventDefault();
+  const base = { type:WHO, first:$("#rFirst").value.trim(), last:$("#rLast").value.trim().replace(/\s+/g," "), language:$("#rLang").value, consent:true };
+  const idv = $("#rSn").value.trim(), em = $("#rEmail").value.trim().toLowerCase();
+  let p;
+  if (WHO === "student") p = { ...base, sn:idv, campus:$("#rCampus").value, living:$("#rLiving").value, transport:$("#rTransport").value, station:$("#rStation").value.trim().slice(0,60) };
+  if (WHO === "staff") p = { ...base, staffNo:idv.toUpperCase(), email:em, department:$("#rDept").value.trim().slice(0,80), campus:$("#rCampus").value, transport:$("#rTransport").value, station:$("#rStation").value.trim().slice(0,60) };
+  if (WHO === "visitor") p = { ...base, email:em, org:$("#rOrg").value.trim().slice(0,100) };
+  const code = $("#rCode").value.trim().toUpperCase().replace(/\s+/g,""); if (code) p.joinCode = code;
+  const pw = $("#rPw").value, pw2 = $("#rPw2").value;
+  if (!p.first || !p.last || !pw || (WHO !== "visitor" && !idv) || (WHO !== "student" && (!em || !code))) return msg("#rMsg", t("errFill"));
+  if (WHO === "student" && !H.snValid(idv)) return msg("#rMsg", t("errSn"));
+  if (WHO === "staff" && !staffOk(idv)) return msg("#rMsg", t("errId"));
+  if (WHO !== "student" && !emailOk(em)) return msg("#rMsg", t("errEmail"));
+  if (WHO === "staff" && !em.endsWith("@" + (CFG.staffEmailDomain || "cput.ac.za"))) return msg("#rMsg", t("errStaffEmail"));
+  if (pw.length < 6) return msg("#rMsg", t("errWeak"));
+  if (pw !== pw2) return msg("#rMsg", t("errMatch"));
+  if (!$("#rConsent").checked) return msg("#rMsg", t("errConsent"));
+  const b = $("#fReg .btn"); b.disabled = true; msg("#rMsg");
+  try { await store.register(p, pw); if (p.language === "isiXhosa") { L = "xh"; try{localStorage.setItem("tutorLang",L);}catch(e){} applyLang(); } }
+  catch(err){ msg("#rMsg", errText(err)); } finally { b.disabled = false; }
+};
+
+// ---------------- verify ----------------
+$("#verifyContinue").onclick = async () => { const u = await store.reloadUser(); if (u && u.emailVerified) enter(u); else msg("#vMsg", t("notVerified")); };
+$("#verifyResend").onclick = async () => { try { await store.resendVerification(); msg("#vMsg", t("sent"), true); } catch(e){ msg("#vMsg", errText(e)); } };
+$("#logoutBtn").onclick = async () => { state.unsubs.forEach(f=>f&&f()); state.unsubs=[]; authTab(false); $("#lPw").value=""; await store.logout(); };
+
+// ---------------- auth state ----------------
+store.onAuth(async u => {
+  state.user = u;
+  if (!u) { show("vAuth"); return; }
+  if (!DEMO && CFG.requireEmailVerification && !u.emailVerified) {
+    state.verifyEmail = u.email; $("#verifyText").textContent = verifyMsg(u.email); show("vVerify"); return;
+  }
+  enter(u);
+});
+
+async function enter(u){
+  show("vLoading");
+  try {
+    if (await store.isAdmin(u.uid)) { location.href = "dashboard.html"; return; }
+    const profile = await store.getProfile(u.uid);
+    if (!profile) { await store.logout(); show("vAuth"); msg("#lMsg", t("errNotOnList")); return; }
+    state.profile = profile;
+    store.updateProfile(u.uid, { lastSeen: Date.now() }).catch(()=>{});
+    state.settings = await store.getSettings().catch(()=>({})) || {};
+    if (!localStorage.getItem("tutorLang") && profile.language === "isiXhosa") { L = "xh"; }
+    state.unsubs.push(store.onAnnouncements(a => { state.announcements = a; renderDeadlines(); }));
+    state.unsubs.push(store.onAsks(u.uid, a => { state.asks = a; renderAsks(); }));
+    state.history = await store.getChats(u.uid, 40).catch(()=>[]);
+    show("vApp"); applyLang(); renderHistory();
+  } catch(e){ console.error(e); show("vAuth"); msg("#lMsg", t("errGeneric")); }
+}
+
+// ---------------- chat ----------------
+function bubble(role, text){ const d = document.createElement("div"); d.className = "b " + (role==="user"?"u":"a"); if (role==="user") d.textContent = text; else { d.innerHTML = H.md(text); d.querySelectorAll("a").forEach(a=>{a.target="_blank";a.rel="noopener";}); } $("#msgs").appendChild(d); $("#msgs").scrollTop = 1e9; return d; }
+function renderHistory(){ $("#msgs").innerHTML = ""; bubble("assistant", t("welcome",{name: state.profile.first})); state.history.forEach(m => bubble(m.role, m.text)); }
+function renderChips(){ const c = $("#chips"); if (!c) return; c.innerHTML = ""; (T[L].chips).forEach(ch => { const b = document.createElement("button"); b.className="chip"; b.type="button"; b.textContent = ch; b.onclick = () => send(ch); c.appendChild(b); }); }
+
+async function send(text){
+  text = (text||"").trim(); if (!text || state.busy) return;
+  state.busy = true; $("#sendBtn").disabled = true; $("#chatIn").value = "";
+  bubble("user", text);
+  const wait = bubble("assistant", ""); wait.innerHTML = `<span class="typing">${t("thinking")}</span>`;
+  const t0 = Date.now();
+  const convo = state.history.slice(-12).map(m => ({ role: m.role, content: m.text }));
+  convo.push({ role:"user", content:text });
+  // API needs alternating roles starting with user
+  while (convo.length && convo[0].role !== "user") convo.shift();
+  try {
+    const sys = buildSystemPrompt(state.profile, state.settings, state.announcements);
+    const raw = await askAI(store, state.user.uid, sys, convo);
+    const { clean, topic } = splitTopic(raw);
+    wait.innerHTML = H.md(clean); wait.querySelectorAll("a").forEach(a=>{a.target="_blank";a.rel="noopener";});
+    const priv = topic === "wellbeing";
+    const um = { role:"user", text, t:t0, topic, ...(priv?{private:true}:{}) };
+    const am = { role:"assistant", text:clean, t:Date.now(), topic, ...(priv?{private:true}:{}) };
+    state.history.push(um, am);
+    await store.addChat(state.user.uid, um); await store.addChat(state.user.uid, am);
+  } catch(e){ console.error(e); wait.innerHTML = `<span style="color:var(--red)">${H.esc(t("errAI"))}</span>`; }
+  finally { state.busy = false; $("#sendBtn").disabled = false; $("#msgs").scrollTop = 1e9; }
+}
+$("#fChat").onsubmit = e => { e.preventDefault(); send($("#chatIn").value); };
+$("#chatIn").addEventListener("keydown", e => { if (e.key==="Enter" && !e.shiftKey && window.innerWidth > 900) { e.preventDefault(); send($("#chatIn").value); } });
+$("#chatIn").addEventListener("input", e => { e.target.style.height="46px"; e.target.style.height=Math.min(140,e.target.scrollHeight)+"px"; });
+
+// ---------------- deadlines ----------------
+function renderDeadlines(){
+  const list = (state.announcements||[]).slice().sort((a,b)=> String(a.due||"9999").localeCompare(String(b.due||"9999")));
+  const today = new Date(); today.setHours(0,0,0,0);
+  $("#dlList").innerHTML = list.length ? list.map(a => {
+    let badge = `<div class="days">📌</div>`;
+    if (a.due) { const d = Math.round((new Date(a.due+"T00:00:00") - today)/86400000);
+      badge = d < 0 ? `<div class="days past">✓<small>${t("past")}</small></div>` : d === 0 ? `<div class="days soon">!<small>${t("today")}</small></div>` : `<div class="days ${d<=7?"soon":""}">${d}<small>${t("daysLeft")}</small></div>`; }
+    return `<div class="dl">${badge}<div><b>${H.esc(a.title)}</b>${a.module?` <span class="pill">${H.esc(a.module)}</span>`:""}<p>${a.due?H.esc(new Date(a.due+"T00:00:00").toLocaleDateString("en-ZA",{weekday:"short",day:"numeric",month:"short"}))+" · ":""}${H.esc(a.body||"")}</p></div></div>`;
+  }).join("") : `<p class="sub" style="margin:0">${t("noDl")}</p>`;
+}
+
+// ---------------- ask lecturer ----------------
+function renderAsks(){
+  $("#askList").innerHTML = (state.asks||[]).slice(0,8).map(a => `<div class="askitem"><div style="display:flex;justify-content:space-between;gap:6px"><span>${H.esc(a.text)}</span><span class="pill ${a.reply?"ok":""}">${a.reply?t("replied"):t("waiting")}</span></div>${a.reply?`<div class="rep">${H.esc(a.reply)}</div>`:""}</div>`).join("");
+}
+$("#fAsk").onsubmit = async e => { e.preventDefault(); const v = $("#askIn").value.trim(); if (!v) return; const b = $("#fAsk .btn"); b.disabled = true;
+  try { await store.addAsk(state.user.uid, v.slice(0,1500)); $("#askIn").value = ""; } catch(err){ console.error(err); } finally { b.disabled = false; } };
+
+// mobile nav
+$$("#mobnav button").forEach(b => b.onclick = () => { $$("#mobnav button").forEach(x=>x.classList.toggle("on",x===b)); const side = b.dataset.pane==="side"; $("#sidePane").classList.toggle("show",side); $("#chatPane").classList.toggle("hide",side); });
+
+// workshop link: index.html#join-ABC123 pre-fills the code and opens Register
+(() => { const m = (location.hash||"").match(/^#join-([A-Za-z0-9]+)$/); if (m) { $("#rCode").value = m[1].toUpperCase(); authTab(true); } })();
+applyLang();
+})();
+</script>
+</body>
+</html>

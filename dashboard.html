@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecturer Dashboard — CPUT First-Year Tutor</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0b2545;--navy2:#13315c;--teal:#0f9d8a;--teal-l:#e3f5f2;--gold:#f2b134;--bg:#f4f6f9;--card:#fff;--ink:#1b2430;--mut:#5d6b7c;--line:#e2e7ee;--red:#c23b3b;--amber:#b7791f}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
+button{font:inherit;cursor:pointer}input,select,textarea{font:inherit}.hidden{display:none!important}
+.top{background:var(--navy);color:#fff;display:flex;align-items:center;gap:14px;padding:10px 20px;position:sticky;top:0;z-index:5;flex-wrap:wrap}
+.logo{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--teal),var(--gold));display:grid;place-items:center;font-weight:800;color:var(--navy)}
+.top b{font-size:15px}.top small{opacity:.7;display:block;font-size:12px}
+nav.tabs{display:flex;gap:4px;margin-left:16px;flex-wrap:wrap}
+nav.tabs button{border:0;background:none;color:#cfd8e3;padding:7px 12px;border-radius:8px;font-weight:600}
+nav.tabs button.on{background:rgba(255,255,255,.14);color:#fff}
+.badge{background:var(--gold);color:var(--navy);border-radius:999px;padding:0 7px;font-size:11px;margin-left:4px}
+.sp{flex:1}.ghost{border:1px solid rgba(255,255,255,.35);background:none;color:#fff;border-radius:8px;padding:5px 10px;font-size:13px}
+main{max-width:1240px;margin:0 auto;padding:20px}
+.card{background:var(--card);border-radius:14px;box-shadow:0 1px 3px rgba(16,24,40,.06);padding:18px;margin-bottom:16px}
+h2{font-size:16px;margin:0 0 12px;color:var(--navy)}h2 small{font-weight:500;color:var(--mut);font-size:12px;margin-left:6px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(16,24,40,.06)}
+.kpi .v{font-size:26px;font-weight:700;color:var(--navy);line-height:1.1}.kpi .l{color:var(--mut);font-size:12px;margin-top:4px}
+.kpi .s{font-size:12px;color:var(--teal);font-weight:600}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+/* bar charts (single series, single hue) */
+.cols{display:flex;align-items:flex-end;gap:2px;height:160px;border-bottom:1px solid var(--line);padding-top:6px}
+.cols .c{flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;position:relative}
+.cols .c i{display:block;background:var(--teal);border-radius:4px 4px 0 0;min-height:0}
+.cols .c:hover i{background:var(--navy2)}
+.cols .c .tip{display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;font-size:12px;padding:3px 7px;border-radius:6px;white-space:nowrap;z-index:2}
+.cols .c:hover .tip{display:block}
+.xlab{display:flex;justify-content:space-between;color:var(--mut);font-size:11px;margin-top:4px}
+.hbar{display:grid;grid-template-columns:150px 1fr 36px;align-items:center;gap:8px;margin:7px 0;font-size:13px}
+.hbar .tr{background:var(--bg);border-radius:4px;height:12px}.hbar .tr i{display:block;height:12px;background:var(--teal);border-radius:0 4px 4px 0}
+.hbar .n{text-align:right;color:var(--mut);font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--mut);font-weight:600;background:#fafbfc;position:sticky;top:0;cursor:pointer;user-select:none}
+tbody tr:hover{background:#f7fafc}td.num{text-align:right;font-variant-numeric:tabular-nums}
+.pill{font-size:11px;padding:2px 8px;border-radius:999px;background:#eef1f5;color:var(--mut);white-space:nowrap}
+.pill.ok{background:var(--teal-l);color:#0b6b5e}.pill.warn{background:#fff3dc;color:#8a5a00}.pill.bad{background:#fdecec;color:var(--red)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+input,select,textarea{padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--teal)}
+.btn{border:0;background:var(--teal);color:#fff;padding:8px 14px;border-radius:9px;font-weight:600}
+.btn.sec{background:#fff;color:var(--navy);border:1px solid var(--line)}.btn.red{background:#fff;color:var(--red);border:1px solid #f1c6c6}
+.btn:disabled{opacity:.6}
+.feed .q{border-top:1px solid var(--line);padding:8px 0}.feed .q:first-child{border-top:0}
+.meta{color:var(--mut);font-size:12px}
+.convo{max-height:560px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:6px}
+.m{max-width:82%;padding:8px 12px;border-radius:12px;font-size:13px;white-space:pre-wrap}
+.m.u{align-self:flex-end;background:var(--navy);color:#fff}.m.a{align-self:flex-start;background:var(--bg)}
+.m.p{align-self:center;background:#fff3dc;color:#8a5a00;font-style:italic}
+.login{max-width:400px;margin:60px auto}
+.login label{display:block;font-weight:600;font-size:13px;margin:12px 0 5px}.login input{width:100%}
+.msg{padding:9px 12px;border-radius:9px;margin-top:10px}.msg.err{background:#fdecec;color:var(--red)}.msg.ok{background:var(--teal-l);color:#0b6b5e}
+.insight{background:linear-gradient(135deg,#f3fbf9,#fdf8ec);border:1px solid var(--line)}
+.insight .body p{margin:.3em 0}.insight .body ul{margin:.3em 0;padding-left:1.2em}
+.scroll{max-height:620px;overflow:auto}
+label.f{display:block;font-size:12px;font-weight:600;color:var(--mut);margin:8px 0 4px}
+.proj{position:fixed;inset:0;background:var(--navy);color:#fff;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:30px}
+.proj .code{font-size:clamp(60px,12vw,150px);font-weight:800;letter-spacing:.12em;color:var(--gold);line-height:1}
+.proj .qr{background:#fff;padding:16px;border-radius:16px}
+.proj .url{font-size:clamp(16px,2.2vw,26px);opacity:.9;word-break:break-all}
+.proj .x{position:absolute;top:18px;right:22px}
+.wsrow{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.switch{display:flex;align-items:center;gap:8px;font-weight:600}
+@media (max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="logo">1Y</div><div><b>Lecturer Dashboard</b><small id="sub">CPUT First-Year Tutor</small></div>
+  <nav class="tabs hidden" id="tabs">
+    <button data-v="overview" class="on">Overview</button>
+    <button data-v="students">Students</button>
+    <button data-v="inbox">Questions <span class="badge hidden" id="inboxBadge"></span></button>
+    <button data-v="convos">Conversations</button>
+    <button data-v="ann">Deadlines</button>
+    <button data-v="settings">Settings</button>
+  </nav>
+  <div class="sp"></div>
+  <a href="index.html" class="ghost" style="text-decoration:none" target="_blank">Student view ↗</a>
+  <button class="ghost hidden" id="logout">Log out</button>
+</div>
+
+<!-- LOGIN -->
+<div class="login hidden" id="vLogin"><div class="card">
+  <h2>Lecturer sign-in</h2>
+  <p class="meta" id="loginHint">Use the lecturer account you created in Firebase Authentication.</p>
+  <form id="fLogin"><label>Email</label><input id="em" type="email" autocomplete="username" required>
+  <label>Password</label><input id="pw" type="password" autocomplete="current-password" required>
+  <button class="btn" style="width:100%;margin-top:14px">Sign in</button></form><div id="lMsg"></div>
+</div></div>
+<div class="login hidden" id="vDenied"><div class="card"><h2>Not authorised</h2><p>This account is not a lecturer account. Add its UID under <code>admins</code> in the database (see README step 5).</p><p class="meta" id="uidShow"></p><button class="btn sec" onclick="Tutor.store.logout()">Sign out</button></div></div>
+
+<main id="vApp" class="hidden">
+  <!-- OVERVIEW -->
+  <section data-view="overview">
+    <div class="kpis" id="kpis"></div>
+    <div class="grid2">
+      <div class="card"><h2>Tutor messages per day <small>last 30 days, student messages</small></h2><div class="cols" id="dayChart"></div><div class="xlab" id="dayLab"></div></div>
+      <div class="card"><h2>What students ask about <small>last 30 days</small></h2><div id="topicChart"></div></div>
+    </div>
+    <div class="card insight"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h2 style="margin:0">AI teaching insight <small>summarises recent study questions (wellbeing chats excluded)</small></h2><button class="btn" id="insBtn">Generate insight</button></div><div class="body" id="insBody" style="margin-top:8px;color:var(--mut)">Click to see common difficulties and suggested follow-up for class.</div></div>
+    <div class="grid2">
+      <div class="card"><h2>Recent study questions <small>academic &amp; planning only</small></h2><div class="feed scroll" id="feed" style="max-height:420px"></div></div>
+      <div>
+        <div class="card"><h2>Needs attention</h2><div id="attention"></div></div>
+        <div class="grid3" style="grid-template-columns:1fr 1fr">
+          <div class="card"><h2>Travel to campus</h2><div id="travelChart"></div></div>
+          <div class="card"><h2>Language</h2><div id="langChart"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STUDENTS -->
+  <section data-view="students" class="hidden"><div class="card">
+    <div class="toolbar">
+      <input id="sSearch" placeholder="Search name or student number" style="min-width:240px">
+      <select id="sFilter"><option value="all">All on class list</option><option value="reg">Registered</option><option value="unreg">Not registered</option><option value="inactive">Registered, inactive 7+ days</option><option value="active">Active last 7 days</option><option value="ws">Workshop sign-ups (all)</option><option value="staff">CPUT staff</option><option value="visitor">Visitors</option></select>
+      <span class="meta" id="sCount"></span><div class="sp" style="flex:1"></div>
+      <button class="btn sec" id="csvBtn">Download CSV</button>
+    </div>
+    <div class="scroll"><table><thead><tr>
+      <th data-k="sn">Student / staff no. or email</th><th data-k="name">Name</th><th data-k="reg">Status</th><th data-k="lastSeen">Last active</th><th data-k="msgs" class="num">Questions</th><th data-k="week" class="num">7 days</th><th data-k="top">Top topic</th><th data-k="campus">Campus / organisation</th><th data-k="transport">Travel</th><th data-k="language">Language</th>
+    </tr></thead><tbody id="sBody"></tbody></table></div>
+  </div></section>
+
+  <!-- INBOX -->
+  <section data-view="inbox" class="hidden"><div class="card"><h2>Questions sent to you <small>students see your reply in their tutor</small></h2>
+    <div class="toolbar"><select id="iFilter"><option value="open">Unanswered</option><option value="all">All</option></select></div>
+    <div id="inbox"></div></div></section>
+
+  <!-- CONVERSATIONS -->
+  <section data-view="convos" class="hidden"><div class="grid2" style="grid-template-columns:320px 1fr">
+    <div class="card"><h2>Students</h2><input id="cSearch" placeholder="Search" style="width:100%;margin-bottom:8px"><div id="cList" class="scroll" style="max-height:560px"></div></div>
+    <div class="card"><h2 id="cTitle">Select a student</h2><div class="convo" id="convo"></div></div>
+  </div></section>
+
+  <!-- ANNOUNCEMENTS -->
+  <section data-view="ann" class="hidden"><div class="grid2">
+    <div class="card"><h2>Deadlines &amp; announcements <small>shown to students and used by the tutor when planning</small></h2><div id="annList"></div></div>
+    <div class="card"><h2 id="annFormTitle">Add a deadline / announcement</h2>
+      <form id="fAnn"><input type="hidden" id="aId">
+        <label class="f">Title *</label><input id="aTitle" required style="width:100%" placeholder="e.g. Design project report due">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><label class="f">Module</label><input id="aMod" style="width:100%" placeholder="IED150S"></div><div><label class="f">Due date (optional)</label><input id="aDue" type="date" style="width:100%"></div></div>
+        <label class="f">Details</label><textarea id="aBody" rows="4" style="width:100%" placeholder="Submission format, venue, marks, etc."></textarea>
+        <div style="display:flex;gap:8px;margin-top:12px"><button class="btn">Save</button><button type="button" class="btn sec" id="aClear">Clear</button></div>
+      </form></div>
+  </div></section>
+
+  <!-- SETTINGS -->
+  <section data-view="settings" class="hidden">
+    <div class="card" id="wsCard"><h2>Workshop / open sign-up <small>for sessions where you don't have an attendee list</small></h2>
+      <p>When this is <b>open</b>, anyone with the code can register with their student number, even if they aren't on the class list. People who register keep access after you close it. Close it when the session ends.</p>
+      <div class="wsrow">
+        <div><label class="f">Workshop name (for your records)</label><input id="wsLabel" placeholder="e.g. Python workshop 18 Nov" style="min-width:260px"></div>
+        <div><label class="f">Join code</label><input id="wsCode" style="width:140px;text-transform:uppercase;letter-spacing:2px;font-weight:700"></div>
+        <button class="btn sec" id="wsNew" type="button">New code</button>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap">
+        <span class="switch">Status: <span class="pill" id="wsState">Closed</span></span>
+        <button class="btn" id="wsOpen">Open sign-up</button><button class="btn red" id="wsClose">Close sign-up</button>
+        <button class="btn sec" id="wsShow">Show on projector</button>
+      </div>
+      <div id="wsMsg" class="meta" style="margin-top:8px"></div>
+    </div>
+    <div class="card"><h2>Notes for the tutor bot <small>the bot treats these as facts — consultation times, test venues, rules, topics this week</small></h2>
+      <textarea id="notes" rows="9" style="width:100%"></textarea>
+      <div style="margin-top:10px;display:flex;gap:8px;align-items:center"><button class="btn" id="saveNotes">Save notes</button><span class="meta" id="notesMsg"></span></div></div>
+    <div class="card"><h2>Class list <small>only these student numbers can register</small></h2>
+      <p class="meta" id="allowInfo"></p>
+      <p>Upload an <b>.xlsx</b> or <b>.csv</b> with columns <code>Student number</code>, <code>LAST NAME</code>, <code>FIRSTNAME</code> (same layout as the Blackboard/ITS export). This replaces the current list. Students already registered keep their accounts.</p>
+      <input type="file" id="clFile" accept=".xlsx,.xls,.csv"> <button class="btn" id="clSave" disabled>Replace class list</button><div id="clMsg"></div></div>
+    <div class="card" id="demoCard"><h2>Demo data</h2><p class="meta">Demo mode stores everything in this browser only. Lecturer login: <b>lecturer@demo</b> / <b>demo1234</b>.</p><button class="btn red" id="resetDemo">Reset demo data</button></div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+<div class="proj hidden" id="proj"><button class="ghost x" id="projX">✕ Close</button>
+  <div style="font-size:22px;opacity:.8" id="projLabel"></div>
+  <div style="font-size:clamp(20px,3vw,34px);font-weight:700">Scan or open the link → <u>Register</u> → choose <u>Student</u>, <u>CPUT staff</u> or <u>Visitor</u> → enter this code</div>
+  <div class="qr" id="projQr"></div><div class="code" id="projCode"></div><div class="url" id="projUrl"></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="config.js"></script>
+<script src="common.js"></script>
+<script>
+(() => {
+const { CFG, DEMO, H, TOPICS, store, askAI } = window.Tutor;
+const $ = H.$, $$ = H.$$;
+const DAY = 86400000;
+const idOf = p => p ? (p.sn || p.staffNo || p.email || "?") : "?";
+const typeLabel = { student:"Student", staff:"CPUT staff", visitor:"Visitor" };
+let D = null, uid = null, unsub = null, sortK = "sn", sortDir = 1, selected = null, pendingAllow = null;
+$("#sub").textContent = CFG.appName + " · " + CFG.courseCode + (DEMO ? " · DEMO MODE" : "");
+if (DEMO) $("#loginHint").innerHTML = "Demo mode: sign in with <b>lecturer@demo</b> / <b>demo1234</b>."; else $("#demoCard").classList.add("hidden");
+
+function view(v){ ["vLogin","vDenied","vApp"].forEach(id => $("#"+id).classList.toggle("hidden", id!==v)); $("#tabs").classList.toggle("hidden", v!=="vApp"); $("#logout").classList.toggle("hidden", v==="vLogin"); }
+$$("#tabs button").forEach(b => b.onclick = () => { $$("#tabs button").forEach(x => x.classList.toggle("on", x===b)); $$("[data-view]").forEach(s => s.classList.toggle("hidden", s.dataset.view !== b.dataset.v)); });
+$("#logout").onclick = () => { unsub && unsub(); store.logout(); };
+$("#fLogin").onsubmit = async e => { e.preventDefault(); $("#lMsg").innerHTML = "";
+  try { await store.login($("#em").value.trim(), $("#pw").value); } catch(err){ $("#lMsg").innerHTML = `<div class="msg err">Sign-in failed. Check email and password.</div>`; } };
+
+store.onAuth(async u => {
+  unsub && unsub(); unsub = null;
+  if (!u) return view("vLogin");
+  uid = u.uid;
+  if (!(await store.isAdmin(u.uid))) { $("#uidShow").textContent = "Your UID: " + u.uid; return view("vDenied"); }
+  view("vApp");
+  unsub = store.onAll(data => { D = data; renderAll(); });
+});
+
+// ---------- derived data ----------
+function model(){
+  const now = Date.now();
+  const byUid = D.students || {};
+  const snToUid = {}; Object.entries(byUid).forEach(([u,p]) => snToUid[p.sn] = u);
+  const rows = Object.entries(D.allow || {}).map(([sn, r]) => {
+    const u = snToUid[sn], p = u ? byUid[u] : null;
+    const msgs = u ? H.toArr((D.chats||{})[u]).filter(m => m.role==="user") : [];
+    const tc = {}; msgs.forEach(m => tc[m.topic||"other"] = (tc[m.topic||"other"]||0)+1);
+    const top = Object.entries(tc).sort((a,b)=>b[1]-a[1])[0];
+    const last = Math.max(p?.lastSeen||0, ...msgs.map(m=>m.t||0));
+    return { sn, uid:u, name: p ? `${p.first} ${p.last}` : `${r.first||""} ${r.last||""}`.trim(), rosterName:`${r.last}, ${r.first}`, reg: !!p,
+      lastSeen: p ? last : 0, msgs: msgs.length, week: msgs.filter(m => now - m.t < 7*DAY).length, top: top ? top[0] : "", campus:p?.campus||"", transport:p?.transport||"", language:p?.language||"", living:p?.living||"" };
+  });
+  // registered students whose number was later removed from the list
+  Object.entries(byUid).forEach(([u,p]) => { if (!(D.allow||{})[p.sn]) {
+    const msgs = H.toArr((D.chats||{})[u]).filter(m => m.role==="user"); const tc = {}; msgs.forEach(m => tc[m.topic||"other"] = (tc[m.topic||"other"]||0)+1);
+    const top = Object.entries(tc).sort((a,b)=>b[1]-a[1])[0];
+    rows.push({ sn:idOf(p), uid:u, type:p.type||"student", email:p.email||"", org:p.org||p.department||"", name:`${p.first} ${p.last}`, reg:true, ws:!!p.joinCode, joinCode:p.joinCode||"", removed:!p.joinCode, lastSeen:Math.max(p.lastSeen||0, ...msgs.map(m=>m.t||0)), msgs:msgs.length, week:msgs.filter(m => now - m.t < 7*DAY).length, top: top?top[0]:"", campus:p.type==="visitor" ? (p.org||"—") : p.campus, transport:p.transport, language:p.language }); } });
+  const allMsgs = []; Object.entries(D.chats||{}).forEach(([u, c]) => H.toArr(c).forEach(m => allMsgs.push({ ...m, uid:u })));
+  const asks = []; Object.entries(D.asks||{}).forEach(([u, c]) => H.toArr(c).forEach(a => asks.push({ ...a, uid:u, aid:a.id })));
+  return { rows, allMsgs, asks, byUid };
+}
+
+function renderAll(){ if (!D) return; const M = model(); renderWs(); renderOverview(M); renderStudents(M); renderInbox(M); renderConvoList(M); renderAnn(); renderSettings(); }
+
+// ---------- overview ----------
+function hbars(el, counts, labels){
+  const arr = Object.entries(counts).sort((a,b)=>b[1]-a[1]); const max = Math.max(1, ...arr.map(a=>a[1]));
+  $(el).innerHTML = arr.length ? arr.map(([k,v]) => `<div class="hbar" title="${H.esc((labels&&labels[k])||k)}: ${v}"><span>${H.esc((labels&&labels[k])||k||"—")}</span><div class="tr"><i style="width:${v/max*100}%"></i></div><span class="n">${v}</span></div>`).join("") : `<p class="meta">No data yet.</p>`;
+}
+function renderOverview(M){
+  const now = Date.now(), reg = M.rows.filter(r=>r.reg && !r.removed && !r.ws), regAll = M.rows.filter(r=>r.reg && !r.removed);
+  const listN = Object.keys(D.allow||{}).length;
+  const wsN = M.rows.filter(r=>r.ws).length;
+  const active7 = regAll.filter(r => now - r.lastSeen < 7*DAY).length;
+  const userMsgs = M.allMsgs.filter(m=>m.role==="user");
+  const wk = userMsgs.filter(m => now - m.t < 7*DAY).length;
+  const open = M.asks.filter(a=>!a.reply).length;
+  $("#kpis").innerHTML = [
+    [listN, "On class list", wsN ? "+ " + wsN + " workshop sign-ups" : ""],
+    [reg.length + wsN, "Registered", listN ? Math.round(reg.length/listN*100)+"% of class list" + (wsN?" + workshop":"") : (wsN ? "via workshop code" : "")],
+    [active7, "Active in last 7 days", regAll.length ? Math.round(active7/regAll.length*100)+"% of registered" : ""],
+    [wk, "Questions in last 7 days", userMsgs.length + " in total"],
+    [open, "Unanswered questions to you", open ? "see Questions tab" : "all answered"]
+  ].map(([v,l,s]) => `<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div><div class="s">${s}</div></div>`).join("");
+  $("#inboxBadge").textContent = open; $("#inboxBadge").classList.toggle("hidden", !open);
+
+  // per day, 30 days
+  const days = []; const start = new Date(); start.setHours(0,0,0,0);
+  for (let i=29;i>=0;i--){ const d0 = start.getTime() - i*DAY; days.push({ d:d0, n:userMsgs.filter(m=>m.t>=d0 && m.t<d0+DAY).length }); }
+  const mx = Math.max(1, ...days.map(d=>d.n));
+  $("#dayChart").innerHTML = days.map(d => `<div class="c"><span class="tip">${new Date(d.d).toLocaleDateString("en-ZA",{weekday:"short",day:"numeric",month:"short"})}: ${d.n}</span><i style="height:${d.n/mx*100}%"></i></div>`).join("");
+  const fmt = t => new Date(t).toLocaleDateString("en-ZA",{day:"numeric",month:"short"});
+  $("#dayLab").innerHTML = `<span>${fmt(days[0].d)}</span><span>${fmt(days[15].d)}</span><span>today</span>`;
+
+  const tc = {}; userMsgs.filter(m => now - m.t < 30*DAY).forEach(m => tc[m.topic||"other"] = (tc[m.topic||"other"]||0)+1);
+  hbars("#topicChart", tc, TOPICS);
+  const tr = {}, lg = {}; regAll.forEach(r => { tr[r.transport||"—"]=(tr[r.transport||"—"]||0)+1; lg[r.language||"—"]=(lg[r.language||"—"]||0)+1; });
+  hbars("#travelChart", tr); hbars("#langChart", lg);
+  $$("#travelChart .hbar, #langChart .hbar").forEach(h => h.style.gridTemplateColumns = "110px 1fr 28px");
+
+  const nameOf = u => { const p = M.byUid[u]; return p ? `${p.first} ${p.last}` : "?"; };
+  const feed = userMsgs.filter(m => !m.private && m.topic !== "wellbeing").sort((a,b)=>b.t-a.t).slice(0,40);
+  $("#feed").innerHTML = feed.length ? feed.map(m => `<div class="q"><div>${H.esc(m.text.slice(0,300))}</div><div class="meta">${H.esc(nameOf(m.uid))} · ${H.ago(m.t)} · <span class="pill">${H.esc(TOPICS[m.topic]||m.topic)}</span></div></div>`).join("") : `<p class="meta">No questions yet.</p>`;
+
+  const unreg = M.rows.filter(r=>!r.reg).length;
+  const inactive = reg.filter(r => now - r.lastSeen >= 14*DAY);
+  const wellbeing = userMsgs.filter(m => m.topic==="wellbeing" && now - m.t < 7*DAY);
+  const wbStudents = new Set(wellbeing.map(m=>m.uid)).size;
+  const removed = M.rows.filter(r=>r.removed).length;
+  $("#attention").innerHTML = [
+    unreg ? `<div class="q"><span class="pill warn">${unreg}</span> students on the list have not registered yet. <a href="#" data-go="students" data-f="unreg">View</a></div>` : "",
+    inactive.length ? `<div class="q"><span class="pill warn">${inactive.length}</span> registered students inactive for 14+ days. <a href="#" data-go="students" data-f="inactive">View</a></div>` : "",
+    open ? `<div class="q"><span class="pill bad">${open}</span> questions waiting for your reply. <a href="#" data-go="inbox">Open</a></div>` : "",
+    wbStudents ? `<div class="q"><span class="pill">${wbStudents}</span> student(s) used the tutor for personal/wellbeing support this week (content private). The bot referred them to Student Counselling.</div>` : "",
+    removed ? `<div class="q"><span class="pill bad">${removed}</span> registered account(s) whose student number is no longer on the class list.</div>` : ""
+  ].join("") || `<p class="meta">Nothing urgent. 👍</p>`;
+  $$("#attention [data-go]").forEach(a => a.onclick = e => { e.preventDefault(); if (a.dataset.f) $("#sFilter").value = a.dataset.f; $(`#tabs [data-v="${a.dataset.go}"]`).click(); renderStudents(model()); });
+}
+
+$("#insBtn").onclick = async () => {
+  const M = model(); const now = Date.now();
+  const qs = M.allMsgs.filter(m => m.role==="user" && !m.private && m.topic!=="wellbeing" && now - m.t < 21*DAY).sort((a,b)=>b.t-a.t).slice(0,200);
+  if (!qs.length) { $("#insBody").textContent = "Not enough questions in the last 3 weeks yet."; return; }
+  $("#insBtn").disabled = true; $("#insBody").textContent = "Analysing " + qs.length + " questions…";
+  const system = "You help a South African university engineering lecturer (first-year class) understand what students are struggling with, based on questions they asked an AI tutor. Be concise and practical. Use markdown: a short summary, then 'Top difficulties' (max 5 bullets, each with roughly how many questions), then 'Suggested actions for class' (max 4 bullets). Do not name individual students.";
+  const content = "Student questions from the last 3 weeks (topic in brackets):\n" + qs.map(m => `- [${m.topic}] ${m.text.slice(0,240).replace(/\n/g," ")}`).join("\n");
+  try { const txt = await askAI(store, uid, system, [{ role:"user", content }], { maxTokens: 900 });
+    $("#insBody").innerHTML = H.md(DEMO ? "**Demo mode** — connect the AI service to generate real insights.\n\nIn demo data, most questions are about maths (differentials) and study planning." : txt.replace(/<<topic:[^>]*>>/,"")); $("#insBody").style.color = "inherit"; }
+  catch(e){ $("#insBody").textContent = "Could not generate insight: " + e.message; }
+  finally { $("#insBtn").disabled = false; }
+};
+
+// ---------- students ----------
+function filteredRows(M){
+  const q = $("#sSearch").value.trim().toLowerCase(), f = $("#sFilter").value, now = Date.now();
+  let r = M.rows.filter(x => !q || x.sn.includes(q) || (x.name+" "+(x.rosterName||"")).toLowerCase().includes(q));
+  if (f==="reg") r = r.filter(x=>x.reg); if (f==="unreg") r = r.filter(x=>!x.reg);
+  if (f==="inactive") r = r.filter(x=>x.reg && now - x.lastSeen >= 7*DAY); if (f==="active") r = r.filter(x=>x.reg && now - x.lastSeen < 7*DAY); if (f==="ws") r = r.filter(x=>x.ws); if (f==="staff") r = r.filter(x=>x.type==="staff"); if (f==="visitor") r = r.filter(x=>x.type==="visitor");
+  r.sort((a,b) => { const A=a[sortK], B=b[sortK]; return (typeof A==="number" ? A-B : String(A).localeCompare(String(B))) * sortDir; });
+  return r;
+}
+function renderStudents(M){
+  const r = filteredRows(M), now = Date.now();
+  $("#sCount").textContent = r.length + " shown";
+  $("#sBody").innerHTML = r.map(x => {
+    const st = x.ws ? `<span class="pill ok" title="Registered with workshop code ${H.esc(x.joinCode)}">${x.type && x.type!=="student" ? typeLabel[x.type] : "Workshop"} · ${H.esc(x.joinCode)}</span>` : x.removed ? `<span class="pill bad">Not on list</span>` : !x.reg ? `<span class="pill">Not registered</span>` : now - x.lastSeen < 7*DAY ? `<span class="pill ok">Active</span>` : `<span class="pill warn">Inactive</span>`;
+    return `<tr data-uid="${x.uid||""}" style="${x.uid?"cursor:pointer":""}"><td>${x.sn}</td><td>${H.esc(x.name)}</td><td>${st}</td><td>${x.reg?H.ago(x.lastSeen):"—"}</td><td class="num">${x.msgs}</td><td class="num">${x.week}</td><td>${x.top?H.esc(TOPICS[x.top]||x.top):"—"}</td><td>${H.esc(x.campus||"—")}</td><td>${H.esc(x.transport||"—")}</td><td>${H.esc(x.language||"—")}</td></tr>`;
+  }).join("");
+  $$("#sBody tr[data-uid]").forEach(tr => { if (tr.dataset.uid) tr.onclick = () => { selected = tr.dataset.uid; $('#tabs [data-v="convos"]').click(); renderConvo(); }; });
+}
+$("#sSearch").oninput = () => renderStudents(model()); $("#sFilter").onchange = () => renderStudents(model());
+$$("th[data-k]").forEach(th => th.onclick = () => { const k = th.dataset.k; sortDir = sortK===k ? -sortDir : 1; sortK = k; renderStudents(model()); });
+$("#csvBtn").onclick = () => {
+  const r = filteredRows(model());
+  const head = ["Student/staff number or email","Name","Type","Registered","Last active","Questions total","Questions 7 days","Top topic","Campus","Travel","Language","Email","Organisation/department"];
+  const lines = [head].concat(r.map(x => [x.sn, x.name, typeLabel[x.type||"student"], x.ws?("Workshop "+x.joinCode):x.reg?"Yes":"No", x.lastSeen?new Date(x.lastSeen).toISOString().slice(0,16).replace("T"," "):"", x.msgs, x.week, TOPICS[x.top]||x.top||"", x.type==="visitor"?"":(x.campus||""), x.transport||"", x.language||"", x.email||"", x.org||""]));
+  const csv = lines.map(l => l.map(v => `"${String(v).replace(/"/g,'""')}"`).join(",")).join("\r\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["﻿"+csv], {type:"text/csv"})); a.download = `${CFG.courseCode}_tutor_usage_${new Date().toISOString().slice(0,10)}.csv`; a.click();
+};
+
+// ---------- inbox ----------
+function renderInbox(M){
+  const f = $("#iFilter").value; const nameOf = u => { const p = M.byUid[u]; return p ? `${p.first} ${p.last} (${idOf(p)}${p.type && p.type!=="student" ? ", " + typeLabel[p.type] : ""})` : u; };
+  const list = M.asks.filter(a => f==="all" || !a.reply).sort((a,b)=> (!!a.reply - !!b.reply) || b.t - a.t);
+  $("#inbox").innerHTML = list.length ? list.map(a => `<div class="feed"><div class="q" style="padding:12px 0"><div><b>${H.esc(nameOf(a.uid))}</b> <span class="meta">· ${H.fmtDate(a.t)}</span></div><div style="margin:4px 0 8px">${H.esc(a.text)}</div>
+    ${a.reply ? `<div class="msg ok" style="margin:0">↳ ${H.esc(a.reply)} <span class="meta">(${H.fmtDate(a.repliedAt)})</span></div>` : `<div style="display:flex;gap:8px"><input style="flex:1" placeholder="Type your reply…" data-reply="${a.uid}|${a.aid}"><button class="btn" data-send="${a.uid}|${a.aid}">Reply</button></div>`}</div></div>`).join("")
+    : `<p class="meta">${f==="open" ? "No unanswered questions. 🎉" : "No questions yet."}</p>`;
+  $$("#inbox [data-send]").forEach(b => b.onclick = async () => { const k = b.dataset.send; const inp = $(`[data-reply="${k}"]`); const v = inp.value.trim(); if (!v) return; const [u,a] = k.split("|"); b.disabled = true; try { await store.replyAsk(u, a, v); } catch(e){ alert && console.error(e); b.disabled = false; } });
+}
+$("#iFilter").onchange = () => renderInbox(model());
+
+// ---------- conversations ----------
+function renderConvoList(M){
+  const q = ($("#cSearch").value||"").toLowerCase();
+  const list = M.rows.filter(r => r.reg && (!q || (r.name+r.sn).toLowerCase().includes(q))).sort((a,b)=>b.lastSeen-a.lastSeen);
+  $("#cList").innerHTML = list.map(r => `<div class="q" style="padding:7px 6px;cursor:pointer;border-radius:8px;${r.uid===selected?"background:var(--teal-l)":""}" data-u="${r.uid}"><b>${H.esc(r.name)}</b><div class="meta">${r.sn} · ${r.msgs} questions · ${H.ago(r.lastSeen)}</div></div>`).join("") || `<p class="meta">No registered students yet.</p>`;
+  $$("#cList [data-u]").forEach(d => d.onclick = () => { selected = d.dataset.u; renderConvoList(model()); renderConvo(); });
+  if (selected) renderConvo();
+}
+$("#cSearch").oninput = () => renderConvoList(model());
+function renderConvo(){
+  if (!D || !selected) return; const p = (D.students||{})[selected]; if (!p) return;
+  $("#cTitle").textContent = `${p.first} ${p.last} · ${idOf(p)}${p.type && p.type!=="student" ? " · " + typeLabel[p.type] + (p.org ? " (" + p.org + ")" : p.department ? " (" + p.department + ")" : "") : ""}`;
+  const msgs = H.toArr((D.chats||{})[selected]).sort((a,b)=>a.t-b.t);
+  let lastPriv = false; const out = [];
+  msgs.forEach(m => { if (m.private || m.topic==="wellbeing") { if (!lastPriv) out.push(`<div class="m p">🔒 Personal / wellbeing conversation — hidden for privacy</div>`); lastPriv = true; return; } lastPriv = false;
+    out.push(`<div class="m ${m.role==="user"?"u":"a"}" ${m.role==="user"?"":'style="white-space:normal"'}>${m.role==="user"?H.esc(m.text):H.md(m.text)}<div class="meta" style="color:${m.role==="user"?"#c9d4e3":"var(--mut)"}">${H.fmtDate(m.t)}${m.role==="user"?" · "+H.esc(TOPICS[m.topic]||m.topic||""):""}</div></div>`); });
+  $("#convo").innerHTML = out.join("") || `<p class="meta">No conversations yet.</p>`; $("#convo").scrollTop = 1e9;
+}
+
+// ---------- announcements ----------
+function renderAnn(){
+  const list = H.toArr(D.announcements).sort((a,b)=> String(a.due||"9999").localeCompare(String(b.due||"9999")));
+  $("#annList").innerHTML = list.length ? `<table><thead><tr><th>Due</th><th>Title</th><th>Module</th><th></th></tr></thead><tbody>` + list.map(a => `<tr><td>${a.due||"—"}</td><td><b>${H.esc(a.title)}</b><div class="meta">${H.esc(a.body||"")}</div></td><td>${H.esc(a.module||"")}</td><td style="white-space:nowrap"><button class="btn sec" data-ed="${a.id}">Edit</button> <button class="btn red" data-del="${a.id}">Delete</button></td></tr>`).join("") + `</tbody></table>` : `<p class="meta">Nothing yet. Add test dates, submission deadlines and practical sessions so the tutor can plan with students.</p>`;
+  $$("#annList [data-del]").forEach(b => b.onclick = () => store.deleteAnnouncement(b.dataset.del));
+  $$("#annList [data-ed]").forEach(b => b.onclick = () => { const a = D.announcements[b.dataset.ed]; $("#aId").value=b.dataset.ed; $("#aTitle").value=a.title||""; $("#aMod").value=a.module||""; $("#aDue").value=a.due||""; $("#aBody").value=a.body||""; $("#annFormTitle").textContent="Edit item"; });
+}
+$("#fAnn").onsubmit = async e => { e.preventDefault(); const a = { title:$("#aTitle").value.trim(), module:$("#aMod").value.trim(), due:$("#aDue").value||"", body:$("#aBody").value.trim() }; if ($("#aId").value) a.id = $("#aId").value; await store.saveAnnouncement(a); $("#aClear").click(); };
+$("#aClear").onclick = () => { $("#fAnn").reset(); $("#aId").value=""; $("#annFormTitle").textContent="Add a deadline / announcement"; };
+
+// ---------- settings ----------
+let notesLoaded = false;
+const DEFAULT_NOTES = `- Lecturer: ${CFG.lecturerName}, Department of Industrial and Systems Engineering. Consultation times: (add here, e.g. Tue & Thu 13:00–14:00, office number).
+- Class: ${CFG.courseCode} (Industrial Engineering Design). Submit assignments on Blackboard as PDF unless told otherwise. Late submission rule: (add here).
+- Tutorials / study groups: (add days, times and venues).
+- Train notice (cttrains.co.za, Nov 2026): some Wellington-line trains are cancelled 16–30 November; the 3505 from Cape Town now leaves at 06:55. Northern/Wellington line students should check https://cttrains.co.za/status2.php before travelling.`;
+function renderSettings(){
+  if (!notesLoaded) { $("#notes").value = (D.settings||{}).notes || DEFAULT_NOTES; notesLoaded = true; if (!(D.settings||{}).notes) $("#notesMsg").textContent = "Suggested starter notes — edit and click Save."; }
+  const n = Object.keys(D.allow||{}).length; $("#allowInfo").textContent = `Current class list: ${n} student numbers.`;
+}
+$("#saveNotes").onclick = async () => { await store.saveSettings({ notes: $("#notes").value.slice(0,6000) }); $("#notesMsg").textContent = "Saved ✓"; setTimeout(()=>$("#notesMsg").textContent="",2500); };
+$("#clFile").onchange = async e => {
+  const f = e.target.files[0]; if (!f) return; pendingAllow = null; $("#clSave").disabled = true;
+  try {
+    const wb = XLSX.read(await f.arrayBuffer(), { type:"array" });
+    const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header:1, raw:false });
+    const hdr = (rows[0]||[]).map(h => String(h||"").toLowerCase().replace(/[^a-z]/g,""));
+    const iSn = hdr.findIndex(h => h.includes("student") || h==="sn" || h.includes("number")), iL = hdr.findIndex(h => h.includes("last") || h.includes("surname")), iF = hdr.findIndex(h => h.includes("first") || h.includes("initial") || h==="name");
+    if (iSn < 0 || iL < 0) throw new Error("Could not find 'Student number' and 'LAST NAME' columns.");
+    const map = {}; rows.slice(1).forEach(r => { const sn = String(r[iSn]||"").replace(/\D/g,""); if (sn.length>=8) map[sn] = { last: String(r[iL]||"").trim().toUpperCase().replace(/\s+/g," "), first: iF>=0 ? String(r[iF]||"").trim() : "" }; });
+    const n = Object.keys(map).length; if (!n) throw new Error("No student numbers found.");
+    pendingAllow = map; $("#clSave").disabled = false; $("#clMsg").innerHTML = `<div class="msg ok">Found ${n} students. Click “Replace class list” to save.</div>`;
+  } catch(err){ $("#clMsg").innerHTML = `<div class="msg err">${H.esc(err.message)}</div>`; }
+};
+$("#clSave").onclick = async () => { if (!pendingAllow) return; await store.setAllow(pendingAllow); $("#clMsg").innerHTML = `<div class="msg ok">Class list saved (${Object.keys(pendingAllow).length} students).</div>`; pendingAllow = null; $("#clSave").disabled = true; };
+// ---------- workshop mode ----------
+const newCode = () => { const A = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let c = ""; for (let i=0;i<6;i++) c += A[Math.floor(Math.random()*A.length)]; return c; };
+let wsLoaded = false;
+function renderWs(){
+  const a = D.access || {};
+  if (!wsLoaded) { $("#wsCode").value = a.code || newCode(); $("#wsLabel").value = a.label || ""; wsLoaded = true; }
+  $("#wsState").textContent = a.open ? "OPEN · code " + a.code : "Closed"; $("#wsState").className = "pill " + (a.open ? "ok" : "");
+  const n = Object.values(D.students||{}).filter(p => p.joinCode && p.joinCode === a.code).length;
+  $("#wsMsg").textContent = a.code ? `${n} people registered with code ${a.code}.` : "";
+}
+const studentUrl = () => new URL("index.html", location.href).href;
+$("#wsNew").onclick = () => { $("#wsCode").value = newCode(); };
+$("#wsOpen").onclick = async () => { const code = $("#wsCode").value.trim().toUpperCase().replace(/[^A-Z0-9]/g,""); if (code.length < 4) { $("#wsMsg").textContent = "Use a code of at least 4 letters/numbers."; return; }
+  $("#wsCode").value = code; await store.saveAccess({ open:true, code, label:$("#wsLabel").value.trim(), openedAt: Date.now() }); };
+$("#wsClose").onclick = () => store.saveAccess({ open:false });
+$("#wsShow").onclick = () => { const a = D.access || {}; const code = a.open ? a.code : $("#wsCode").value.trim().toUpperCase();
+  const link = studentUrl() + "#join-" + code;
+  $("#projCode").textContent = code; $("#projUrl").textContent = studentUrl(); $("#projLabel").textContent = (a.label || $("#wsLabel").value || "") + (a.open ? "" : "  (sign-up is CLOSED — click Open sign-up first)");
+  $("#projQr").innerHTML = ""; if (window.QRCode) new QRCode($("#projQr"), { text: link, width: 260, height: 260, correctLevel: QRCode.CorrectLevel.M }); else $("#projQr").classList.add("hidden");
+  $("#proj").classList.remove("hidden"); try { document.documentElement.requestFullscreen(); } catch(e){} };
+$("#projX").onclick = () => { $("#proj").classList.add("hidden"); try { document.fullscreenElement && document.exitFullscreen(); } catch(e){} };
+$("#resetDemo").onclick = () => store.resetDemo && store.resetDemo();
+})();
+</script>
+</body>
+</html>
