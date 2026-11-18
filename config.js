@@ -30,10 +30,12 @@ window.TUTOR_CONFIG = {
 
   // Firebase → Project settings → General → Your apps → Web app config
   firebase: {
-    apiKey: "YOUR_FIREBASE_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-    projectId: "YOUR_PROJECT",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyA_ecbTA8_wIFen_Fh4LkZeASB7S5PAfAY",
+    authDomain: "cput-tutor.firebaseapp.com",
+    databaseURL: "https://cput-tutor-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "cput-tutor",
+    storageBucket: "cput-tutor.firebasestorage.app",
+    messagingSenderId: "620734963006",
+    appId: "1:620734963006:web:2bc787d0baf679894b206f"
   }
 };
